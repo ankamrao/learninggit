@@ -1,0 +1,24 @@
+name: Manual Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version number for the release'
+        required: true
+      notes:
+        description: 'The release notes for the release'
+        required: true
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        tag_name: ${{ inputs.version }}
+        release_name: Release ${{ inputs.version }}
+        body: ${{ inputs.notes }}
