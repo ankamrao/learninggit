@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  MY_AUTH_TOKEN: ${{ secrets.MY_AUTH_TOKEN }}
 
 jobs:
   release:
