@@ -1,21 +1,31 @@
-name: Release-Notes-Preview
+name: Semantic Release
 
 on:
-  pull_request:
-    branches: [ master ]
-  issue_comment:
-    types: [ edited ]
+  push:
+    branches:
+      - main
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  preview:
+  release:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        git fetch --prune --unshallow --tags
-    - uses: snyk/release-notes-preview@v1.6.1
-      with:
-        releaseBranch: master
-      env:
-        GITHUB_PR_USERNAME: ${{ github.actor }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Semantic Release
+        uses: semantic-release/github-action@v1
+        with:
+          version: '^17.0.0'
+          repository-dispatch: true
