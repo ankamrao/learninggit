@@ -1,4 +1,4 @@
-name: Create release
+name: Create draft release
 
 on:
   push:
@@ -6,14 +6,15 @@ on:
       - master
 
 jobs:
-  create-release:
+  create-draft-release:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Create release
+    - name: Create draft release
       uses: actions/create-release@v1
       with:
         tag_name: "v${{ env.TAG_NAME }}"
-        release_name: "Release for version v${{ env.TAG_NAME }}"
-        draft: false
-        prerelease: false
+        release_name: "Draft release for version v${{ env.TAG_NAME }}"
+        draft: true
+        prerelease: true
+        token: ${{ secrets.GITHUB_TOKEN }}
