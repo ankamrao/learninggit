@@ -17,4 +17,4 @@ jobs:
         release_name: "Draft release for version v${{ env.TAG_NAME }}"
         draft: true
         prerelease: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.MY_AUTH }}
