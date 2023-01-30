@@ -1,19 +1,23 @@
 name: Create draft release
 
 on:
-  push:
-    tags:
-      - "v*"
+  pull_request:
+    types: [closed]
 
 jobs:
   create-draft-release:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Check if pull request was merged
+      if: github.event.pull_request.merged
+      env:
+        TAG_NAME: "${{ env.TAG_NAME }}"
+
     - name: Create draft release
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ env.TAG_NAME }}
+        tag_name: "${{ env.TAG_NAME }}"
         release_name: "Draft release for version ${{ env.TAG_NAME }}"
         draft: true
         prerelease: true
