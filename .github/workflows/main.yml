@@ -3,7 +3,7 @@ name: Semantic Release
 on:
   push:
     branches:
-      - main
+      - master
 
 env:
   MY_AUTH_TOKEN: ${{ secrets.MY_AUTH_TOKEN }}
