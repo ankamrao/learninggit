@@ -1,0 +1,27 @@
+name: Generate Release Notes
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Generate Release Notes
+      run: |
+        git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:'%s' > release_notes.txt
+
+    - name: Create Release
+      uses: actions/create-release-action@v1
+      with:
+        tag-name: ${{ env.TAG_NAME }}
+        release-name: "Release ${{ env.TAG_NAME }}"
+        body-file-path: release_notes.txt
+        draft: true
+        prerelease: false
