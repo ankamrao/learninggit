@@ -1,19 +1,21 @@
-name: Releases
+name: Release-Notes-Preview
 
-on: 
-  push:
-    tags:
-    - '*'
+on:
+  pull_request:
+    branches: [ master ]
+  issue_comment:
+    types: [ edited ]
 
 jobs:
-
-  build:
+  preview:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
     - uses: actions/checkout@v2
-    - uses: ncipollo/release-action@v1
+    - run: |
+        git fetch --prune --unshallow --tags
+    - uses: snyk/release-notes-preview@v1.6.1
       with:
-        artifacts: "release.tar.gz,foo/*.txt"
-        bodyFile: "body.md"
+        releaseBranch: master
+      env:
+        GITHUB_PR_USERNAME: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
