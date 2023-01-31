@@ -1,8 +1,9 @@
 name: Generate Release Notes
 
 on:
-  release:
-    types: [created, edited]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -21,8 +22,11 @@ jobs:
         tag-to: ${{ env.TAG_TO }}
         context: ${{ env.GITHUB_CONTEXT }}
 
-    - name: Update Release
-      uses: actions/update-release-action@v1
+    - name: Create Release
+      uses: actions/create-release-action@v1
       with:
-        release-id: ${{ env.RELEASE_ID }}
+        tag-name: ${{ env.TAG_NAME }}
+        release-name: "Release ${{ env.TAG_NAME }}"
         body-file-path: CHANGELOG.md
+        draft: true
+        prerelease: false
