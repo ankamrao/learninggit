@@ -1,4 +1,4 @@
-name: Get Commit History
+name: Get Commit Histry
 
 on:
   push:
