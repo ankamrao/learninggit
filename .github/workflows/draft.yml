@@ -1,9 +1,9 @@
-name: Create release template
+name: Populate Release Notes Template
 
 on:
   push:
     branches:
-      - main
+      - master
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -13,21 +13,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
     - name: Fetch Commit History
       run: |
-        git clone https://github.com/${{ github.repository }}.git
-        cd ${{ github.repository }}
-        git checkout ${{ github.ref }}
+        git log --pretty=format:'%s' [LATEST COMMIT]..HEAD > commits.txt
 
     - name: Parse Commit Messages
       run: |
-        # parse commit messages and extract information about new features, bug fixes, and improvements
+        # parse the commit messages and extract information about new features, bug fixes, and improvements
 
     - name: Populate Template
       run: |
-        # populate the template with the information extracted from the commit history
+        # populate the release note template with the extracted information
 
-    - name: Publish Release Notes
+    - name: Create Release
       uses: actions/create-release@v1
       with:
         tag_name: [VERSION NUMBER]
