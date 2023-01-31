@@ -1,32 +1,21 @@
-name: Generate Release Notes
+name: Release-Notes-Preview
 
 on:
-  push:
-    tags:
-      - 'v*'
+  pull_request:
+    branches: [ master ]
+  issue_comment:
+    types: [ edited ]
 
 jobs:
-  build:
+  preview:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Generate Release Notes
-      uses: actions/generate-release-notes-action@v1
+    - uses: actions/checkout@v2
+    - run: |
+        git fetch --prune --unshallow --tags
+    - uses: snyk/release-notes-preview@v1.6.1
       with:
-        conventional-changelog-options: "--preset angular"
-        file-name: CHANGELOG.md
-        tag-from: ${{ env.TAG_FROM }}
-        tag-to: ${{ env.TAG_TO }}
-        context: ${{ env.GITHUB_CONTEXT }}
-
-    - name: Create Release
-      uses: actions/create-release-action@v1
-      with:
-        tag-name: ${{ env.TAG_NAME }}
-        release-name: "Release ${{ env.TAG_NAME }}"
-        body-file-path: CHANGELOG.md
-        draft: true
-        prerelease: false
+        releaseBranch: master
+      env:
+        GITHUB_PR_USERNAME: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
