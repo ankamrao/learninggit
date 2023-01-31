@@ -15,13 +15,14 @@ jobs:
 
     - name: Generate Release Notes
       run: |
-        git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:'%s' > release_notes.txt
+        npx semantic-release@17
+        npx semantic-release-notes-generator@2.2.0 -o release_notes.md -l
 
     - name: Create Release
       uses: actions/create-release-action@v1
       with:
         tag-name: ${{ env.TAG_NAME }}
         release-name: "Release ${{ env.TAG_NAME }}"
-        body-file-path: release_notes.txt
+        body-file-path: release_notes.md
         draft: true
         prerelease: false
