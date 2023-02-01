@@ -1,21 +1,25 @@
-name: Release-Notes-Preview
-
+name: Update Changelog
 on:
-  pull_request:
-    branches: [ master ]
-  issue_comment:
-    types: [ edited ]
-
+  release:
+    types: [published]
 jobs:
-  preview:
+  updateChangelog:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        git fetch --prune --unshallow --tags
-    - uses: snyk/release-notes-preview@v1.6.1
-      with:
-        releaseBranch: master
-      env:
-        GITHUB_PR_USERNAME: ${{ github.actor }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Update Changelog
+        run: |
+          curl -o git-chglog -L https://github.com/git-chglog/git-chglog/releases/download/0.9.1/git-chglog_linux_amd64
+          chmod u+x git-chglog
+          ./git-chglog -o CHANGELOG.md
+          rm git-chglog
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: update changelog
+          title: Update Changelog
+          body: Update changelog to reflect release changes
+          branch: update-changelog
+          base: main
