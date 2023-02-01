@@ -2,7 +2,7 @@ name: Update AUTHORS
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   updateAuthors:
     runs-on: ubuntu-latest
